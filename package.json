@@ -18,6 +18,7 @@
   "homepage": "https://github.com/Ebed-meleck/api-ang_test#readme",
   "dependencies": {
     "dotenv": "^8.2.0",
+    "eslint-config-airbnb": "^18.2.1",
     "express": "^4.17.1",
     "mysql": "^2.18.1"
   }
