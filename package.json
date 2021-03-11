@@ -4,7 +4,9 @@
   "description": "'api send to contact '",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js",
+    "build:db": "cross-env migration/build-fresh.sh"
   },
   "repository": {
     "type": "git",
@@ -17,9 +19,25 @@
   },
   "homepage": "https://github.com/Ebed-meleck/api-ang_test#readme",
   "dependencies": {
+    "body-parser": "^1.19.0",
+    "cookie-session": "^1.4.0",
+    "cross-env": "^7.0.3",
+    "debug": "^4.3.1",
     "dotenv": "^8.2.0",
     "eslint-config-airbnb": "^18.2.1",
+    "eslint-plugin-import": "^2.22.1",
     "express": "^4.17.1",
+    "express-router": "0.0.1",
+    "express-session": "^1.17.1",
+    "helmet": "^4.4.1",
+    "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.21",
     "mysql": "^2.18.1"
+  },
+  "devDependencies": {
+    "eslint": "^7.21.0",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-react": "^7.22.0",
+    "eslint-plugin-react-hooks": "^4.2.0"
   }
 }
