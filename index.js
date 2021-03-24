@@ -1,63 +1,46 @@
-const dotEnv = require("dotEnv");
-const helmet = require("helmet");
-const session = require("cookie-session");
-const body_parser = require("body-parser");
-const express = require("express");
-const cmRoutes = require("./routes/crmRoutes");
-const authRoutes = require("./routes/authRoutes");
-const debug = require("debug")("APP");
-const http = require("http");
-// envrionnement .env
-configEnvironnrmentVariable();
+let http = require("http");
+const app = require("./app");
 
-const app = express();
-const PORT = process.env.PORT;
+const normalizePort = (val) => {
+  const port = parseInt(val, 10);
 
-//helmet
+  if (isNaN(port)) {
+    return val;
+  }
+  if (port >= 0) {
+    return port;
+  }
+  return false;
+};
 
-app.use(helmet());
-//session and middleware
-app.use(
-  session({
-    secret: process.env.SESSION,
-    keys: "user_id",
-    secure: true,
-  })
-);
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
-  next();
-});
-app.use(body_parser.urlencoded({ extended: true }));
-app.use(body_parser.json());
+const port = normalizePort(process.env.PORT || 3000);
+app.set("port", port);
+const errorHandler = (error) => {
+  if (error.syscall !== "listen") {
+    throw error;
+  }
+  const address = server.address();
+  const bind = typeof address === "string" ? "pipe" + address : "port: " + port;
+  switch (error.code) {
+    case "EACCES":
+      console.error(bind + "requires elevated priveleges.");
+      process.exit(1);
+      break;
+    case "EADDRINUSE":
+      console.error(bind + " is already  in use");
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+};
 
-//routes enpoint
-app.use("/auth", authRoutes);
-app.use("/contact", cmRoutes);
-
-//started server
 const server = http.createServer(app);
-server.listen(PORT, () => {
-  console.log(`server started at ${PORT}`);
+server.on("error", errorHandler);
+server.on("listening", () => {
+  const address = server.address();
+  const bind = typeof address === "string" ? "pipe" + address : "port: " + port;
+  console.log("Server started at " + bind);
 });
 
-// configuration environnement variable
-
-function configEnvironnrmentVariable() {
-  const dotfile = `.env`.trim();
-  dotEnv.config({ path: dotfile });
-}
-
-//
-process.on("uncaughtException", (e) => {
-  debug("process.onUncaugghtException: %o", e);
-  process.exit(1);
-});
-
-process.on("warning", (warning) => {
-  debug("process.onWarning: %o", warning);
-});
+server.listen(port);

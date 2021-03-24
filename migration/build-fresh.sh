@@ -7,7 +7,7 @@ echo "[build]"
 echo "Building Database"
 
 set -a
-source '.env'
+source './.env'
 set +a
 
 # set build timeout
@@ -15,9 +15,7 @@ TIMEOUT=${BUILD_TIMEOUT:-8}
 
 fout=/dev/null
 
-if [ "$1" == "debug" ]; then
-    fout=/dev/tty
-fi
+
 
 # build the test database
 mysql -u $DB_USER -p$DB_PASS -e "DROP DATABASE IF EXISTS $DB_NAME ;"

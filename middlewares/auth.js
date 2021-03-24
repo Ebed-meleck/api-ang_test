@@ -1,3 +1,18 @@
-exports.authEndecode = authEndecode;
+const jwt = require("jsonwebtoken");
 
-const authEndecode = () => {};
+const authEndecode = (req, res, next) => {
+  try {
+    const secret = process.env.SESSION_HASH;
+    const token = req.headers.authorization.split(" ")[0];
+    const decodedToken = jwt.verify(token, secret);
+    const userId = decodedToken.userId;
+    if (req.body.userId && req.body.userId !== userId) {
+      throw "Invalid user ID";
+    } else {
+      next();
+    }
+  } catch (err) {
+    res.status(401).json({ error: err });
+  }
+};
+exports.authEndecode = authEndecode;

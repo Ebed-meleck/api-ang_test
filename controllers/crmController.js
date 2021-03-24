@@ -27,7 +27,6 @@ function getAll(req, res, next) {
   const sql = `SELECT * FROM contact;`;
   db.query(sql)
     .then((rows) => {
-      console.log(rows);
       res.status(201).json({ data: rows });
     })
     .catch(next);
@@ -43,8 +42,9 @@ function getOneContact(req, res, next) {
 }
 function updateContact(req, res, next) {
   const { id: _id } = req.params;
-  const sql = `UPDATE contact SET ? WHERE id=?;`;
-  db.query(sql, [_id])
+  const contact = { ...req.body };
+  const sql = `UPDATE contact SET ? WHERE (id=?);`;
+  db.query(sql, [contact, _id])
     .then(() => {
       res.status(201).json({ message: "update succes!" });
     })
